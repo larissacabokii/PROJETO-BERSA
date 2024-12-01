@@ -1,0 +1,194 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <ctime>
+#include <iomanip>
+#include <algorithm>
+
+using namespace std;
+
+struct Tarefa {
+    int id;                   // Identificador único
+    string titulo;            // Título da tarefa
+    string descricao;         // Descrição da tarefa
+    string dataCriacao;       // Data no formato "dd/mm/yyyy"
+    string status;            // Status (pendente, em andamento, concluída)
+    string prioridade;        // Prioridade (baixa, média, alta)
+
+    // Exibição formatada da tarefa
+    void exibir() const {
+        cout << "\nID: " << id
+             << "\nTítulo: " << titulo
+             << "\nDescrição: " << descricao
+             << "\nData de Criação: " << dataCriacao
+             << "\nStatus: " << status
+             << "\nPrioridade: " << prioridade << "\n";
+    }
+};
+vector<Tarefa> tarefas; // Vetor dinâmico de tarefas
+int proximoId = 1;      // Gerador incremental de ID único
+
+void cadastrarTarefa() {
+    Tarefa nova;
+    nova.id = proximoId++;
+    
+    cout << "Título da tarefa: ";
+    cin.ignore();
+    getline(cin, nova.titulo);
+
+    cout << "Descrição: ";
+    getline(cin, nova.descricao);
+
+    cout << "Data de criação (dd/mm/yyyy): ";
+    getline(cin, nova.dataCriacao);
+
+    cout << "Status (pendente, em andamento, concluída): ";
+    getline(cin, nova.status);
+
+    cout << "Prioridade (baixa, média, alta): ";
+    getline(cin, nova.prioridade);
+
+    tarefas.push_back(nova);
+    cout << "Tarefa cadastrada com sucesso!\n";
+}
+void listarTarefas() {
+    if (tarefas.empty()) {
+        cout << "Nenhuma tarefa cadastrada.\n";
+        return;
+    }
+    for (const auto& tarefa : tarefas) {
+        tarefa.exibir();
+    }
+}
+void buscarTarefaPorCodigo() {
+    int id;
+    cout << "Digite o ID da tarefa: ";
+    cin >> id;
+
+    auto it = find_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+        return t.id == id;
+    });
+
+    if (it != tarefas.end()) {
+        it->exibir();
+    } else {
+        cout << "Tarefa com ID " << id << " não encontrada.\n";
+    }
+}
+void editarTarefa() {
+    int id;
+    cout << "Digite o ID da tarefa que deseja editar: ";
+    cin >> id;
+
+    auto it = find_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+        return t.id == id;
+    });
+
+    if (it != tarefas.end()) {
+        cout << "Editando tarefa ID " << id << ":\n";
+        cout << "Novo título (atual: " << it->titulo << "): ";
+        cin.ignore();
+        getline(cin, it->titulo);
+
+        cout << "Nova descrição (atual: " << it->descricao << "): ";
+        getline(cin, it->descricao);
+
+        cout << "Novo status (atual: " << it->status << "): ";
+        getline(cin, it->status);
+
+        cout << "Nova prioridade (atual: " << it->prioridade << "): ";
+        getline(cin, it->prioridade);
+
+        cout << "Tarefa atualizada com sucesso!\n";
+    } else {
+        cout << "Tarefa com ID " << id << " não encontrada.\n";
+    }
+}
+void excluirTarefa() {
+    int id;
+    cout << "Digite o ID da tarefa que deseja excluir: ";
+    cin >> id;
+
+    auto it = remove_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+        return t.id == id;
+    });
+
+    if (it != tarefas.end()) {
+        tarefas.erase(it, tarefas.end());
+        cout << "Tarefa excluída com sucesso!\n";
+    } else {
+        cout << "Tarefa com ID " << id << " não encontrada.\n";
+    }
+}
+void salvarEmArquivo(const string& nomeArquivo) {
+    ofstream arquivo(nomeArquivo, ios::out);
+    if (!arquivo.is_open()) {
+        cout << "Erro ao salvar no arquivo.\n";
+        return;
+    }
+    for (const auto& tarefa : tarefas) {
+        arquivo << tarefa.id << '\n'
+                << tarefa.titulo << '\n'
+                << tarefa.descricao << '\n'
+                << tarefa.dataCriacao << '\n'
+                << tarefa.status << '\n'
+                << tarefa.prioridade << '\n';
+    }
+    arquivo.close();
+    cout << "Dados salvos com sucesso!\n";
+}
+void carregarDoArquivo(const string& nomeArquivo) {
+    ifstream arquivo(nomeArquivo, ios::in);
+    if (!arquivo.is_open()) {
+        cout << "Nenhum arquivo encontrado.\n";
+        return;
+    }
+
+    Tarefa tarefa;
+    while (arquivo >> tarefa.id) {
+        arquivo.ignore(); // Ignorar newline
+        getline(arquivo, tarefa.titulo);
+        getline(arquivo, tarefa.descricao);
+        getline(arquivo, tarefa.dataCriacao);
+        getline(arquivo, tarefa.status);
+        getline(arquivo, tarefa.prioridade);
+        tarefas.push_back(tarefa);
+        proximoId = max(proximoId, tarefa.id + 1);
+    }
+
+    arquivo.close();
+    cout << "Dados carregados com sucesso!\n";
+}
+void exibirMenu() {
+    cout << "\nMenu:\n";
+    cout << "1. Cadastrar nova tarefa\n";
+    cout << "2. Visualizar todas as tarefas\n";
+    cout << "3. Buscar tarefa por código\n";
+    cout << "4. Editar tarefa\n";
+    cout << "5. Excluir tarefa\n";
+    cout << "6. Salvar tarefas em arquivo\n";
+    cout << "7. Sair\n";
+    cout << "Escolha uma opção: ";
+}
+int main() {
+    carregarDoArquivo("tarefas.txt");
+
+    int opcao;
+    do {
+        exibirMenu();
+        cin >> opcao;
+        switch (opcao) {
+            case 1: cadastrarTarefa(); break;
+            case 2: listarTarefas(); break;
+            case 3: buscarTarefaPorCodigo(); break;
+            case 4: editarTarefa(); break;
+            case 5: excluirTarefa(); break;
+            case 6: salvarEmArquivo("tarefas.txt"); break;
+            case 7: cout << "Saindo...\n"; break;
+            default: cout << "Opção inválida!\n"; break;
+        }
+    } while (opcao != 7);
+
+    return 0;
+}
