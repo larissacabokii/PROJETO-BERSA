@@ -1,177 +1,177 @@
 #include <iostream>
-#include <vector>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <ctime>
 #include <iomanip>
 #include <algorithm>
+#include <sstream>
+#include <filesystem>
 
 using namespace std;
 
-struct Tarefa {
-    int id;                   // Identificador único
-    string titulo;            // Título da tarefa
-    string descricao;         // Descrição da tarefa
-    string dataCriacao;       // Data no formato "dd/mm/yyyy"
-    string status;            // Status (pendente, em andamento, concluída)
-    string prioridade;        // Prioridade (baixa, média, alta)
+string tarefa {
+    int id; // para localizar cada tarefa 
+    string titulo; // o titulo da tarefa 
+    string descricao; // o que irá fazer 
+    string dataCriacao; // data que irá realizar a tarefa 
+    string prioridade; //prioridade da tarefa 
 
-    // Exibição formatada da tarefa
-    void exibir() const {
-        cout << "\nID: " << id
-             << "\nTítulo: " << titulo
-             << "\nDescrição: " << descricao
-             << "\nData de Criação: " << dataCriacao
-             << "\nStatus: " << status
-             << "\nPrioridade: " << prioridade << "\n";
+    void exibir () const {
+
+        cout << "\nId: "<< id 
+        << "\nTitulo: " << titulo
+        << "\nDescrição: " descricao
+        << "\nData da criação: " << dataCriacao
+        << "\nStatus: " << status 
+        << "\nPrioridade: "<< prioridade << "\n";
+
     }
 };
-vector<Tarefa> tarefas; // Vetor dinâmico de tarefas
-int proximoId = 1;      // Gerador incremental de ID único
 
-void cadastrarTarefa() {
-    Tarefa nova;
-    nova.id = proximoId++;
-    
-    cout << "Título da tarefa: ";
-    cin.ignore();
-    getline(cin, nova.titulo);
+vector<tarefa> tarefas; // Armazena as tarefas 
+int gerarId = 01; //Declara que o numero é inteiro a partir do numero 01 e irá gerar um numero sequencial a partir de cada tarefa cadastrada 
 
-    cout << "Descrição: ";
-    getline(cin, nova.descricao);
+void cadastrarTarefa(){ // funçao para cadastrar nova tarefa
+Tarefa nova; //comando para uma tarefa 
+nova.id = gerarId++; // adicionador de ID para cada tarefa 
+cout << "\nColoque o titulo da tarefa: " // mensagem que a pessoa irá ver para colocar o titulo
+getline (cin nova.titulo); //aguarda a pessoa digitar o novo titulo e Armazenana variavel titulo 
+cout << "\nColoque nova descrição da tarefa:"; // mensagem que irá aparecer para a pessoa colocar uma nova descricao da tarefa 
+getline (cin nova.titulo);
+cout << "\nColoque a data de criação (11/11/1111):"; //mensagem que vai aparecer para a pessoa colocar a data conforme o exemplo 
+getline (cin nova.titulo);
 
-    cout << "Data de criação (dd/mm/yyyy): ";
-    getline(cin, nova.dataCriacao);
+cout "\nColoque o status: "; 
+getline (cin nova.titulo);
 
-    cout << "Status (pendente, em andamento, concluída): ";
-    getline(cin, nova.status);
+cout "\nColoque a prioridade: ";
+getline (cin nova.titulo);
 
-    cout << "Prioridade (baixa, média, alta): ";
-    getline(cin, nova.prioridade);
+tarefas.push_back(nova);
+cout << "\n Uma nova tarefa foi cadastrada!\n";
 
-    tarefas.push_back(nova);
-    cout << "Tarefa cadastrada com sucesso!\n";
 }
-void listarTarefas() {
+
+void listarTarefas(){
     if (tarefas.empty()) {
-        cout << "Nenhuma tarefa cadastrada.\n";
-        return;
+     cout << "Nenhuma tarefa foi cadastrada!.\n;
+     return;   
     }
-    for (const auto& tarefa : tarefas) {
+    for (const auto& tarefa : tarefas){
         tarefa.exibir();
+
     }
 }
-void buscarTarefaPorCodigo() {
-    int id;
-    cout << "Digite o ID da tarefa: ";
-    cin >> id;
 
-    auto it = find_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+void buscarPorCodigo(){
+    int id;
+    cin >> id;
+    cout <<"Coloque o Id da tarefa para buscar: ";
+    auto it = find_if (tarefas.begin(), tarefas.end(), [id] (const Tarefa& t){
         return t.id == id;
     });
-
     if (it != tarefas.end()) {
         it->exibir();
     } else {
-        cout << "Tarefa com ID " << id << " não encontrada.\n";
+        cout << Ä tarefa com Id "<< id << "nao foi possivel ser encontrada!.\n";
+
     }
 }
-void editarTarefa() {
-    int id;
-    cout << "Digite o ID da tarefa que deseja editar: ";
-    cin >> id;
 
-    auto it = find_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+void editarTarefa (){
+    int id;
+    cout << "coloque o Id da tarefa para poder editar: ";
+    Cin >> id;
+
+    auto it = find_(tarefas.beigin(), tarefas.end(), [id] (const
+    tarefa& t) {
         return t.id == id;
     });
-
-    if (it != tarefas.end()) {
-        cout << "Editando tarefa ID " << id << ":\n";
-        cout << "Novo título (atual: " << it->titulo << "): ";
-        cin.ignore();
-        getline(cin, it->titulo);
-
-        cout << "Nova descrição (atual: " << it->descricao << "): ";
-        getline(cin, it->descricao);
-
-        cout << "Novo status (atual: " << it->status << "): ";
-        getline(cin, it->status);
-
-        cout << "Nova prioridade (atual: " << it->prioridade << "): ";
-        getline(cin, it->prioridade);
-
-        cout << "Tarefa atualizada com sucesso!\n";
-    } else {
-        cout << "Tarefa com ID " << id << " não encontrada.\n";
-    }
 }
-void excluirTarefa() {
-    int id;
-    cout << "Digite o ID da tarefa que deseja excluir: ";
+
+if (it != tarefas.end()){
+
+    cout << Editando tarefa Id " << id << ":\n";
+    cout << "Novo titulo (atual: " << it->titulo << "): ";
+
+    cin.ignore();
+    getline(cin, it->descricao);
+
+    cout << "Adicione a nova prioridade (atual: "<< it->prioridade << "): ";
+    getline(cin, it->prioridade);
+
+    cout << A tarefa foi alterada com sucesso!\n";
+} else{
+    cout << "Tarefa com Id da tarefa para poder excluir: ";
     cin >> id;
 
-    auto it = remove_if(tarefas.begin(), tarefas.end(), [id](const Tarefa& t) {
+    auto it = remove_if(tarefas.begin(), tarefas.end(), [id] (const
+    Tarefa& t){
         return t.id == id;
     });
-
     if (it != tarefas.end()) {
         tarefas.erase(it, tarefas.end());
-        cout << "Tarefa excluída com sucesso!\n";
-    } else {
-        cout << "Tarefa com ID " << id << " não encontrada.\n";
+        cout << "Tarefa informada foi excluida!\n";
+    } else{
+        cout << "Tarefa com Id "<< id << "nao foi possivel ser encontrada!. \n";
+
     }
 }
 void salvarEmArquivo(const string& nomeArquivo) {
     ofstream arquivo(nomeArquivo, ios::out);
     if (!arquivo.is_open()) {
-        cout << "Erro ao salvar no arquivo.\n";
+        cout << Erro ao tentar salvar no arquivo!. \n";
         return;
     }
-    for (const auto& tarefa : tarefas) {
-        arquivo << tarefa.id << '\n'
+    for (const auto& tarefa : tarefas){
+        arquivo << tarefa.id << '\n''
                 << tarefa.titulo << '\n'
-                << tarefa.descricao << '\n'
-                << tarefa.dataCriacao << '\n'
-                << tarefa.status << '\n'
-                << tarefa.prioridade << '\n';
+                << tarefa.descricao <<'\n'
+                << tarefa.dataCriacao <<'\n'
+                << tarefa.status <<'\n'
+                << tarefa.prioridade <<'\n'
+
     }
     arquivo.close();
-    cout << "Dados salvos com sucesso!\n";
+    cout << "Arquivos foram salvos com sucesso!\n";
 }
-void carregarDoArquivo(const string& nomeArquivo) {
-    ifstream arquivo(nomeArquivo, ios::in);
-    if (!arquivo.is_open()) {
-        cout << "Nenhum arquivo encontrado.\n";
-        return;
-    }
 
-    Tarefa tarefa;
-    while (arquivo >> tarefa.id) {
-        arquivo.ignore(); // Ignorar newline
-        getline(arquivo, tarefa.titulo);
-        getline(arquivo, tarefa.descricao);
-        getline(arquivo, tarefa.dataCriacao);
-        getline(arquivo, tarefa.status);
-        getline(arquivo, tarefa.prioridade);
-        tarefas.push_back(tarefa);
-        proximoId = max(proximoId, tarefa.id + 1);
-    }
+void carregarDoArquivo(const string& nomeArquivo){
+ifstream arquivo(nomeArquivo, ios::in);
+if (!arquivo.is_open()){
+    cout << "Nenhum arquivo foi encontrada!.\n";
+    return;
+}
+Tarefa tarefa;
+while (arquivo >> tarefa.id){
+    arquivo.ignore();
+    getline(arqivo, tarefa.titulo);
+    getline(arqivo, tarefa.descricao);
+    getline(arqivo, tarefa.dataCriacao);
+    getline(arqivo, tarefa.status);
+    getline(arqivo, tarefa.prioridade);
 
-    arquivo.close();
-    cout << "Dados carregados com sucesso!\n";
+    tarefas.push_back(tarefa);
+    gerarId = max (gerarId, tarefa.id + 1);
+    
 }
-void exibirMenu() {
-    cout << "\nMenu:\n";
-    cout << "1. Cadastrar nova tarefa\n";
-    cout << "2. Visualizar todas as tarefas\n";
-    cout << "3. Buscar tarefa por código\n";
-    cout << "4. Editar tarefa\n";
-    cout << "5. Excluir tarefa\n";
-    cout << "6. Salvar tarefas em arquivo\n";
-    cout << "7. Sair\n";
-    cout << "Escolha uma opção: ";
+arquivo.close();
+cout << Arquivos carregados com sucesso!\n";
 }
-int main() {
+
+void exibirMenu (){
+    cout << "\n MENU PRINCIPAL: \n";
+    cout << " 1 - Cadastrar nova tarefa:\n";
+    cout << " 2 - Visualizar tarefas:\n";
+    cout << " 3 - Buscar por codigo:\n";
+    cout << " 4 - Editar tarefa:\n";
+    cout << " 5 - Excluir tarefa:\n";
+    cout << " 6 - Salvar em arquivos:\n";
+    cout << " 7 - Sair:\n";
+    cout << "Escolha a sua opção:";
+}
+int main (){
     carregarDoArquivo("tarefas.txt");
 
     int opcao;
@@ -180,15 +180,14 @@ int main() {
         cin >> opcao;
         switch (opcao) {
             case 1: cadastrarTarefa(); break;
-            case 2: listarTarefas(); break;
-            case 3: buscarTarefaPorCodigo(); break;
+            case 2: listarTarefasTarefa(); break;
+            case 3: buscarPorCodigo(); break;
             case 4: editarTarefa(); break;
             case 5: excluirTarefa(); break;
-            case 6: salvarEmArquivo("tarefas.txt"); break;
-            case 7: cout << "Saindo...\n"; break;
-            default: cout << "Opção inválida!\n"; break;
+            case 6: salvarEmArquivo("tarefas.txt); break;
+            case 7: cout << "Encerrando...\n"; break;
+            default: cout << Opção nao foi aceita!\n"; break;
         }
     } while (opcao != 7);
-
     return 0;
 }
